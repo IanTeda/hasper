@@ -17,16 +17,16 @@ module.exports = (gulp, config, argv, $) => {
       .pipe($.concat(config.scripts.filename))
       .pipe($.size({title: 'Scripts concatenated into one file:'}))
 
-      // Add hash to concatenated script file
-      .pipe($.hash())
-      .on('end', function() {
-        $.util.log('Hash added to concatenated script file');
-      })
-
       // Uglify JavaScript. Remove unneeded characters
       .pipe($.uglify(config.uglify.options))
       .pipe($.rename({suffix: '.min'}))
       .pipe($.size({title: 'Concatenated script uglified down to:'}))
+
+      // Add hash to concatenated script file
+      .pipe($.hash())
+      .on('end', function() {
+        $.util.log('Hash added to concatenated script');
+      })
 
       // Write stream to destination folder -- make a copy -- before compressing
       .pipe(gulp.dest(config.scripts.dest))
@@ -39,10 +39,10 @@ module.exports = (gulp, config, argv, $) => {
       .pipe(gulp.dest(config.scripts.dest))
 
       // Create hash map of script
-      .pipe($.hash.manifest('hash-script.json'))
+      .pipe($.hash.manifest('hash-scripts.json'))
       .pipe(gulp.dest('data'))
       .on('end', function() {
-        $.util.log('Script hash map "hash-script.json" written to "/data" folder');
+        $.util.log('Script hash-map "hash-scripts.json" written to "/data" folder');
       });
 
     return stream;

@@ -1,12 +1,16 @@
 'use strict';
 
 let autoprefixer = require('autoprefixer');
-let mqpacker = require('css-mqpacker');
+let cssnano = require('cssnano');
+let cssnext = require('postcss-cssnext');
 let csswring = require('csswring');
+let lost = require('lost');
+let magician = require('postcss-font-magician');
+let mqpacker = require('css-mqpacker');
 let pngquant = require('imagemin-pngquant');
+let postImport = require('postcss-import');
+let sprites = require('postcss-sprites');
 
-const assets = 'assets/';
-const tmp = '.tmp/';
 const hstatic = 'static/';
 const nodeModules = 'node_modules/';
 const src = 'src/';
@@ -54,10 +58,16 @@ module.exports = {
   postcss: {
     processors: [
       autoprefixer({
-        browsers: ['last 1 version'],
+        browsers: ['last 3 version'],
       }),
-      mqpacker,
+      cssnano,
+      cssnext,
       csswring,
+      lost,
+      magician,
+      mqpacker,
+      postImport,
+      sprites,
     ],
   },
   scripts: {
@@ -69,15 +79,13 @@ module.exports = {
     dest: hstatic + 'scripts',
   },
   styles: {
-    filename: 'main.css',
-    css: [
+    filename: 'hasper.css',
+    src: [
       nodeModules + '/animate.css/animate.css',
       nodeModules + '/font-awesome/css/font-awesome.css',
-      assets + 'styles/screen.css',
-      assets + 'styles/syntax.css',
+      src + 'styles/screen.css',
     ],
-    sass: assets + 'sass/main.scss',
-    dest: tmp + assets + 'styles',
+    dest: hstatic + 'styles',
   },
   uglify: {
     options: {

@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
 // Import Gulp module
-import gulp from "gulp";
+import gulp from 'gulp';
 // Command line (CLI) argument
-var argv = require("./tasks/yargs");
+var argv = require('./tasks/yargs');
 // Configuration file for gulp tasks
-const config = require("./tasks/config");
+const config = require('./tasks/config');
 // Lazy load plugins, save on var declaration
-var plugins = require("gulp-load-plugins")(config.gulpLoadPlugins.options);
+var plugins = require('gulp-load-plugins')(config.gulpLoadPlugins.options);
 
 /**
  * Require Gulp Task
@@ -16,7 +16,7 @@ var plugins = require("gulp-load-plugins")(config.gulpLoadPlugins.options);
  */
 function requireTask(task) {
   // Require Gulp task module, passing in Gulp, config, argv and plugin objects
-  return require("./tasks/" + task + ".js")(
+  return require('./tasks/' + task + '.js')(
     gulp,
     config,
     argv,
@@ -31,11 +31,39 @@ function requireTask(task) {
  */
 function requireCleanTask(directory) {
   // Require gulp task module
-  return require("./tasks/clean")(
+  return require('./tasks/clean')(
     directory,
     plugins
   );
 }
+
+
+/**
+ * Font Tasks
+ * Usage: gulp fonts:clean - Clean main.css from styles build folder
+ * Usage: gulp fonts:build - Build main.css from source into build folder
+ * Usage: gulp fonts       - Clean build folder, then build from source into build folder
+*/
+gulp.task(
+  'fonts:clean',
+  requireCleanTask(
+    config.fonts.dest + '/**/*.{eot,svg,ttf,woff,woff2,otf}'
+  )
+);
+gulp.task(
+  'fonts:build',
+  requireTask(
+    'fonts'
+  )
+);
+gulp.task(
+  'fonts',
+  gulp.series(
+    'fonts:clean',
+    'fonts:build'
+  )
+);
+
 
 /**
  * Images Tasks
@@ -44,22 +72,22 @@ function requireCleanTask(directory) {
  * Usage: gulp images       - Clean build folder, then minify and copy images to build folder
 */
 gulp.task(
-  "images:clean",
+  'images:clean',
   requireCleanTask(
-    config.images.dest + "/**/*.{png,gif,jpg}"
+    config.images.dest + '/**/*.{png,gif,jpg}'
   )
 );
 gulp.task(
-  "images:build",
+  'images:build',
   requireTask(
-    "images"
+    'images'
   )
 );
 gulp.task(
-  "images",
+  'images',
   gulp.series(
-    "images:clean",
-    "images:build"
+    'images:clean',
+    'images:build'
   )
 );
 
@@ -70,47 +98,93 @@ gulp.task(
  * Usage: gulp scripts        - Clean build folder, then build from source into build folder
 */
 gulp.task(
-  "scripts:clean",
+  'scripts:clean',
   requireCleanTask(
-    config.scripts.dest + "/**/*"
+    config.scripts.dest + '/**/*'
   )
 );
 gulp.task(
-  "scripts:build",
+  'scripts:build',
   requireTask(
-    "scripts"
+    'scripts'
   )
 );
 gulp.task(
-  "scripts",
+  'scripts',
   gulp.series(
-    "scripts:clean",
-    "scripts:build"
+    'scripts:clean',
+    'scripts:build'
   )
 );
 
 /**
- * Font Tasks
- * Usage: gulp fonts:clean - Clean main.css from styles build folder
- * Usage: gulp fonts:build - Build main.css from source into build folder
- * Usage: gulp fonts       - Clean build folder, then build from source into build folder
+ * Styles Tasks
+ * Usage: gulp styles:clean - Clean main.css from styles build folder
+ * Usage: gulp styles:build - Build main.css from source into build folder
+ * Usage: gulp styles       - Clean build folder, then build from source into build folder
 */
 gulp.task(
-  "fonts:clean",
+  'styles:clean',
   requireCleanTask(
-    config.fonts.dest + "/**/*.{eot,svg,ttf,woff,woff2,otf}"
+    config.styles.dest + '/**/*'
   )
 );
 gulp.task(
-  "fonts:build",
+  'styles:build',
   requireTask(
-    "fonts"
+    'styles'
   )
 );
 gulp.task(
-  "fonts",
+  'styles',
   gulp.series(
-    "fonts:clean",
-    "fonts:build"
+    'styles:clean',
+    'styles:build'
   )
 );
+
+/**
+ * Theme Developement
+ * Usage: gulp serve - Start BrowserSync and start watching for file changes
+ */
+gulp.task('development', () => {
+
+  gulp.parallel('fonts', 'images', 'scripts', 'styles');
+
+  // Watch for font changes
+  gulp.watch(
+    [
+      'src/fonts/**/*'
+    ]
+  ).on('change', gulp.series(
+      'fonts'
+  ));
+
+  // Watch for image changes
+  gulp.watch(
+    [
+      'src/images/**/*'
+    ]
+  ).on('change', gulp.series(
+      'images'
+  ));
+
+  // Watch for Script changes
+  gulp.watch(
+    [
+      'src/scripts/**/*.js'
+    ]
+  ).on('change', gulp.series(
+    'scripts'
+  ));
+
+  // Watch for Styles changes
+  gulp.watch(
+    [
+      'src/styles/**/*.css'
+    ]
+  ).on('change', gulp.series(
+      'styles'
+  ));
+
+});

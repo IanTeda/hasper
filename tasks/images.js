@@ -25,10 +25,8 @@ module.exports = (gulp, config, argv, $) => {
       // Create hash map of images
       .pipe($.hash.manifest('hash-images.json'))
       .on('end', function() {
-        $.util.log('Images hashed');
+        $.util.log('Images hash-map "hash-images.json" written to "/data" folder');
       })
-
-      // Put hash map in the data directory
       .pipe(gulp.dest('data'));
 
     return stream;
