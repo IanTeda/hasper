@@ -1,5 +1,5 @@
 node_modules/
-data/**/hash.*
+data/**/hash*
 static/
 public/
 
@@ -11,7 +11,6 @@ public/
 
 # Icon must end with two \r
 Icon
-
 
 # Thumbnails
 ._*
