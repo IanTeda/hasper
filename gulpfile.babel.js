@@ -88,3 +88,29 @@ gulp.task(
     "scripts:build"
   )
 );
+
+/**
+ * Font Tasks
+ * Usage: gulp fonts:clean - Clean main.css from styles build folder
+ * Usage: gulp fonts:build - Build main.css from source into build folder
+ * Usage: gulp fonts       - Clean build folder, then build from source into build folder
+*/
+gulp.task(
+  "fonts:clean",
+  requireCleanTask(
+    config.fonts.dest + "/**/*.{eot,svg,ttf,woff,woff2,otf}"
+  )
+);
+gulp.task(
+  "fonts:build",
+  requireTask(
+    "fonts"
+  )
+);
+gulp.task(
+  "fonts",
+  gulp.series(
+    "fonts:clean",
+    "fonts:build"
+  )
+);

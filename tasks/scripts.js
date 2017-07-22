@@ -38,7 +38,7 @@ module.exports = (gulp, config, argv, $) => {
       // Write stream to destination folder
       .pipe(gulp.dest(config.scripts.dest))
 
-      // Create hash map of images
+      // Create hash map of script
       .pipe($.hash.manifest('hash-script.json'))
       .pipe(gulp.dest('data'))
       .on('end', function() {

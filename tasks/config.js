@@ -6,31 +6,18 @@ let csswring = require('csswring');
 let pngquant = require('imagemin-pngquant');
 
 const assets = 'assets/';
-const build = 'build/';
 const tmp = '.tmp/';
 const hstatic = 'static/';
 const nodeModules = 'node_modules/';
-const release = '.release';
 const src = 'src/';
 
 module.exports = {
-  downloads: {
-    src: assets + '/downloads/**/*',
-    dest: tmp + assets + 'downloads',
-  },
   fonts: {
     src: [
       nodeModules + 'font-awesome/fonts/**/*.{eot,svg,ttf,woff,woff2,otf}',
-      assets + 'fonts/**/*.{eot,svg,ttf,woff,woff2,otf}',
+      src + 'fonts/**/*.{eot,svg,ttf,woff,woff2,otf}',
     ],
-    dest: tmp + assets + 'fonts',
-  },
-  ghPages: {
-    options: {
-      branch: 'master',
-      cacheDir: release,
-      remoteUrl: 'git@github.com:IanTeda/ianteda.github.io.git',
-    },
+    dest: hstatic + 'fonts',
   },
   gulpLoadPlugins: {
     options: {
@@ -50,35 +37,6 @@ module.exports = {
   gzip: {
     options: {
       append: true,
-    },
-  },
-  html: {
-    src: build + '**/*.html',
-    dest: build,
-  },
-  htmlmin: {
-    options: {
-      removeComments: true,
-      collapseWhitespace: true,
-      collapseBooleanAttributes: true,
-      removeAttributeQuotes: true,
-      removeRedundantAttributes: true,
-    },
-  },
-  inject: {
-    ignorePath: tmp,
-    options: {
-      read: false,
-    },
-    scripts: {
-      target: '_includes/scripts.html',
-      references: tmp + assets + 'scripts/*.js',
-      destination: '_includes/',
-    },
-    styles: {
-      target: '_includes/styles.html',
-      references: tmp + assets + 'styles/*.css',
-      destination: '_includes/',
     },
   },
   images: {
