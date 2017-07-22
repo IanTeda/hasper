@@ -8,7 +8,7 @@
  */
 module.exports = (directory, $) => {
   return function() {
-    var stream = $.del(directory); // Use globbing pattern to match everything inside the folder
+    let stream = $.del(directory); // Use globbing pattern to match everything inside the folder
     return stream;
   };
 };
