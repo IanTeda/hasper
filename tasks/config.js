@@ -17,6 +17,7 @@ const src = 'src/';
 
 module.exports = {
   fonts: {
+    extensions: '*.{eot,svg,ttf,woff,woff2,otf}',
     src: [
       nodeModules + 'font-awesome/fonts/**/*.{eot,svg,ttf,woff,woff2,otf}',
       src + 'fonts/**/*.{eot,svg,ttf,woff,woff2,otf}',
@@ -44,8 +45,46 @@ module.exports = {
     },
   },
   images: {
+    extensions: '*.{png,gif,jpg}',
     src: src + 'images/**/*.{png,gif,jpg}',
     dest: hstatic + 'images',
+    responsive: {
+      config: {
+        '*': [
+          {
+            width: 480,
+            rename: {suffix: '-sm'},
+            withoutEnlargement: true,
+          }, {
+            width: 480 * 2,
+            rename: {suffix: '-sm@2x'},
+            withoutEnlargement: true,
+          }, {
+            width: 675,
+            withoutEnlargement: true,
+          }, {
+            width: 675 * 2,
+            rename: {suffix: '@2x'},
+            withoutEnlargement: true,
+          },
+        ],
+      },
+      global: {
+        // Global configuration for all images
+        // The output quality for JPEG, WebP and TIFF output formats
+        quality: 70,
+        // Use progressive (interlace) scan for JPEG and PNG output
+        progressive: true,
+        // Zlib compression level of PNG output format
+        compressionLevel: 6,
+        // Strip all metadata
+        withMetadata: false,
+        // Skip files that need enlargement
+        errorOnEnlargement: false,
+        // Don't spam the console
+        silent: true,
+      },
+    },
   },
   imagemin: {
     options: {
@@ -71,6 +110,7 @@ module.exports = {
     ],
   },
   scripts: {
+    extensions: '*.js',
     filename: 'hasper.js',
     src: [
       nodeModules + 'jquery/dist/jquery.js',
@@ -79,6 +119,7 @@ module.exports = {
     dest: hstatic + 'scripts',
   },
   styles: {
+    extensions: '*.css',
     filename: 'hasper.css',
     src: [
       nodeModules + '/animate.css/animate.css',

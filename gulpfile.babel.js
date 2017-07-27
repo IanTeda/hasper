@@ -8,6 +8,8 @@ var argv = require('./tasks/yargs');
 const config = require('./tasks/config');
 // Lazy load plugins, save on var declaration
 var plugins = require('gulp-load-plugins')(config.gulpLoadPlugins.options);
+// BrowserSync is used to live-reload your website
+var browserSync = require('browser-sync').create();
 
 /**
  * Require Gulp Task
@@ -39,7 +41,7 @@ function requireCleanTask(directory) {
 
 
 /**
- * Font Tasks
+ * FONT TASKS
  * Usage: gulp fonts:clean - Clean main.css from styles build folder
  * Usage: gulp fonts:build - Build main.css from source into build folder
  * Usage: gulp fonts       - Clean build folder, then build from source into build folder
@@ -66,7 +68,7 @@ gulp.task(
 
 
 /**
- * Images Tasks
+ * IMAGE TASKS
  * Usage: gulp images:clean - Clean images from build folder
  * Usage: gulp images:build - Copy and minify images to build folder
  * Usage: gulp images       - Clean build folder, then minify and copy images to build folder
@@ -92,7 +94,7 @@ gulp.task(
 );
 
 /**
- * Scripts Tasks
+ * SCRIPT TASKS
  * Usage: gulp scripts:clean  - Clean main.js from the JavaScripts build folder
  * Usage: gulp scripts:build  - Build main.js from source into build folder
  * Usage: gulp scripts        - Clean build folder, then build from source into build folder
@@ -118,7 +120,7 @@ gulp.task(
 );
 
 /**
- * Styles Tasks
+ * STYLE TASKS
  * Usage: gulp styles:clean - Clean main.css from styles build folder
  * Usage: gulp styles:build - Build main.css from source into build folder
  * Usage: gulp styles       - Clean build folder, then build from source into build folder
@@ -143,48 +145,51 @@ gulp.task(
   )
 );
 
+
 /**
- * Theme Developement
- * Usage: gulp serve - Start BrowserSync and start watching for file changes
- */
-gulp.task('development', () => {
+ * WATCH TASKS
+ * Usage: gulp watch:fonts    - Watch for font changes, then clean and build.
+ * Usage: gulp watch:images   - Watch for images changes, then clean and build.
+ * Usage: gulp watch:scripts  - Watch for script changes, then clean and build.
+ * Usage: gulp watch:styles   - Watch for style changes, then clean and build.
+ * Usage: gulp watch          - Watch all for changes
+*/
 
-  gulp.parallel('fonts', 'images', 'scripts', 'styles');
-
-  // Watch for font changes
-  gulp.watch(
-    [
-      'src/fonts/**/*'
-    ]
-  ).on('change', gulp.series(
-      'fonts'
-  ));
-
-  // Watch for image changes
-  gulp.watch(
-    [
-      'src/images/**/*'
-    ]
-  ).on('change', gulp.series(
-      'images'
-  ));
-
-  // Watch for Script changes
-  gulp.watch(
-    [
-      'src/scripts/**/*.js'
-    ]
-  ).on('change', gulp.series(
-    'scripts'
-  ));
-
-  // Watch for Styles changes
-  gulp.watch(
-    [
-      'src/styles/**/*.css'
-    ]
-  ).on('change', gulp.series(
-      'styles'
-  ));
-
+// Watch for font changes
+gulp.task('watch:fonts', () => {
+  gulp.watch(config.fonts.extensions,  gulp.series('fonts'));
 });
+
+// Watch for image changes
+gulp.task('watch:images', () => {
+  gulp.watch(config.images.extensions, gulp.series('images'));
+});
+
+// Watch for script changes
+gulp.task('watch:scripts', () => {
+  gulp.watch(config.scripts.extensions, gulp.series('scripts'));
+});
+
+// Watch for script changes
+gulp.task('watch:styles', () => {
+  gulp.watch(config.styles.extensions, gulp.series('styles'));
+});
+
+gulp.task('watch', gulp.parallel('watch:fonts', 'watch:images', 'watch:scripts', 'watch:styles'));
+
+/**
+ * MAIN TASKS
+ */
+
+// Watch for script changes
+gulp.task('hugo', () => {
+  gulp.src('../../gulpfile.babel.js')
+    .pipe(plugins.chug());
+});
+
+
+gulp.task('build', gulp.parallel('fonts', 'images', 'scripts', 'styles'));
+
+gulp.task('development', gulp.series('build', 'watch'));
+
+gulp.task('default', gulp.parallel('development'));

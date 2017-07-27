@@ -13,6 +13,12 @@ module.exports = (gulp, config, argv, $) => {
       // Image sources
       .src(config.images.src)
 
+      // Create response copies and compress
+      .pipe($.responsive(
+        config.images.responsive.config,
+        config.images.responsive.global
+      ))
+
       // Minimise images
       .pipe($.imagemin(config.imagemin.options))
 
@@ -24,10 +30,13 @@ module.exports = (gulp, config, argv, $) => {
 
       // Create hash map of images
       .pipe($.hash.manifest('hash-images.json'))
+      // Write has map to /data folder
+      .pipe(gulp.dest('data'))
       .on('end', function() {
-        $.util.log('Images hash-map "hash-images.json" written to "/data" folder');
-      })
-      .pipe(gulp.dest('data'));
+        $.util.log(
+          'Images hash-map "hash-images.json" written to "/data" folder'
+        );
+      });
 
     return stream;
   };
