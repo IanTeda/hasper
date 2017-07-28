@@ -1,9 +1,7 @@
 'use strict';
 
 let autoprefixer = require('autoprefixer');
-let cssnano = require('cssnano');
 let cssnext = require('postcss-cssnext');
-let csswring = require('csswring');
 let lost = require('lost');
 let magician = require('postcss-font-magician');
 let mqpacker = require('css-mqpacker');
@@ -99,9 +97,7 @@ module.exports = {
       autoprefixer({
         browsers: ['last 3 version'],
       }),
-      cssnano,
       cssnext,
-      csswring,
       lost,
       magician,
       mqpacker,

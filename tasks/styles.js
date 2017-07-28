@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Gulp Task for JavaScript Files
  * @param {gulp} gulp - The gulp module passed in
@@ -10,6 +8,7 @@
  */
 
 module.exports = (gulp, config, argv, $) => {
+  'use strict';
   return function() {
     let stream = gulp
       // CSS source files.
@@ -21,28 +20,17 @@ module.exports = (gulp, config, argv, $) => {
 
       // Apply PostCSS processors to the stream
       .pipe($.postcss(config.postcss.processors))
-      .pipe($.rename({suffix: '.min'}))
-      .pipe($.size({title: 'Concatenated, postCSS & uglified down to:'}))
+      .pipe($.size({title: 'postCSS:'}))
 
       // Write source maps for easier debugging, since we are concatenating
-      .pipe($.if(!argv.prod, $.sourcemaps.write('./')))
-      .pipe($.if(!argv.prod, $.size({title: 'Style source maps written:'})))
+      .pipe($.sourcemaps.write('./'))
+      .pipe($.size({title: 'Style source maps written:'}))
 
       // Add hash to concatenated script file
       .pipe($.hash())
       .on('end', function() {
         $.util.log('Hash added to concatenated styles');
       })
-
-      // Write stream (copy) to drive before we zip
-      .pipe(gulp.dest(config.styles.dest))
-
-      // Zip stream for faster transfer
-      .pipe($.gzip(config.gzip.options))
-      .pipe($.size({
-        title: 'Styles compressed down to:',
-        gzip: true,
-      }))
 
       // Write stream to drive
       .pipe(gulp.dest(config.styles.dest))
@@ -51,7 +39,9 @@ module.exports = (gulp, config, argv, $) => {
       .pipe($.hash.manifest('hash-styles.json'))
       .pipe(gulp.dest('data'))
       .on('end', function() {
-        $.util.log('Style hash-map "hash-styles.json" written to "/data" folder');
+        $.util.log(
+          'Style hash-map "hash-styles.json" written to "/data" folder'
+        );
       });
 
     return stream;

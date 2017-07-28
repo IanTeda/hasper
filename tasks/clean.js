@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Gulp Clean Task
  * @module clean.task.js
@@ -7,8 +6,10 @@
  * @return {task} Clean - Clean directory passed in
  */
 module.exports = (directory, $) => {
+  'use strict';
   return function() {
-    let stream = $.del(directory); // Use globbing pattern to match everything inside the folder
+    // Use globbing pattern to match everything inside the folder
+    let stream = $.del(directory);
     return stream;
   };
 };

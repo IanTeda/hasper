@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Gulp Task for JavaScript Files
  * @param {gulp} gulp - The gulp module passed in
@@ -8,8 +7,9 @@
  * @return {stream} Stream - Task stream to manage fonts in project
  */
 module.exports = (gulp, config, argv, $) => {
+  'use strict';
   return function() {
-    var stream = gulp
+    let stream = gulp
       // Font source files
       .src(config.fonts.src)
       .pipe($.newer(config.fonts.dest))

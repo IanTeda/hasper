@@ -1,4 +1,3 @@
-'use strict';
 /**
  * Gulp Image Task
  * @param {gulp} gulp - The gulp module passed in
@@ -8,6 +7,7 @@
  */
 
 module.exports = (gulp, config, argv, $) => {
+  'use strict';
   return function() {
     let stream = gulp
       // Image sources

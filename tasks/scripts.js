@@ -1,4 +1,3 @@
-"use strict";
 /**
  * Gulp Task for JavaScript Files
  * @param {gulp} gulp - The gulp module passed in
@@ -8,6 +7,7 @@
  * @return {stream} Stream - Task stream to manage JavaScript in project
  */
 module.exports = (gulp, config, argv, $) => {
+  'use strict';
   return function() {
     let stream = gulp
       // JavaScript source files. Order of important and set in config.
@@ -17,23 +17,11 @@ module.exports = (gulp, config, argv, $) => {
       .pipe($.concat(config.scripts.filename))
       .pipe($.size({title: 'Scripts concatenated into one file:'}))
 
-      // Uglify JavaScript. Remove unneeded characters
-      .pipe($.uglify(config.uglify.options))
-      .pipe($.rename({suffix: '.min'}))
-      .pipe($.size({title: 'Concatenated script uglified down to:'}))
-
       // Add hash to concatenated script file
       .pipe($.hash())
       .on('end', function() {
         $.util.log('Hash added to concatenated script');
       })
-
-      // Write stream to destination folder -- make a copy -- before compressing
-      .pipe(gulp.dest(config.scripts.dest))
-
-      // Compress script stream
-      .pipe($.gzip(config.gzip.options))
-      .pipe($.size({title: 'Concatenated script zipped down to:', gzip: true}))
 
       // Write stream to destination folder
       .pipe(gulp.dest(config.scripts.dest))
